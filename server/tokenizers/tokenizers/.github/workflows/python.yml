@@ -1,0 +1,125 @@
+name: Python
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - bindings/node/**
+  pull_request:
+    paths-ignore:
+      - bindings/node/**
+
+jobs:
+  build_win_32:
+    name: Check it builds for Windows 32-bit
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        python: ["3.7", "3.8", "3.9", "3.10"]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v1
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable-i686-pc-windows-msvc
+          override: true
+
+      - name: Override toolchain
+        shell: bash
+        working-directory: ./bindings/python
+        run: echo "stable-i686-pc-windows-msvc" > rust-toolchain
+
+
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python }}
+          architecture: x86
+
+      - name: Build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --manifest-path ./bindings/python/Cargo.toml
+
+
+  build_and_test:
+    name: Check everything builds & tests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v1
+        
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          components: rustfmt, clippy
+
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+          architecture: "x64"
+
+
+      - name: Cache Cargo Registry
+        uses: actions/cache@v1
+        with:
+          path: ~/.cargo/registry
+          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+
+          # - name: Cache Cargo Build Target
+          #   uses: actions/cache@v1
+          #   with:
+          #     path: ./bindings/python/target
+          #     key: ${{ runner.os }}-cargo-python-build-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Lint with RustFmt
+        uses: actions-rs/cargo@v1
+        with:
+          toolchain: stable
+          command: fmt
+          args: --manifest-path ./bindings/python/Cargo.toml -- --check
+
+      - name: Lint with Clippy
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: --manifest-path ./bindings/python/Cargo.toml --all-targets --all-features -- -D warnings
+
+      - name: Run Audit
+        uses: actions-rs/cargo@v1
+        with:
+          command: audit
+          # ignoring specific CVE which probably isn't affecting this crate
+          # https://github.com/chronotope/chrono/issues/602
+          args: -D warnings -f ./bindings/python/Cargo.lock --ignore RUSTSEC-2020-0071 --ignore RUSTSEC-2021-0145
+
+      - name: Install
+        working-directory: ./bindings/python
+        run: |
+          python -m venv .env
+          source .env/bin/activate
+          pip install -U pip
+          pip install pytest requests setuptools_rust numpy pyarrow datasets
+          pip install -e .[dev]
+
+      - name: Check style
+        working-directory: ./bindings/python
+        run: |
+          source .env/bin/activate
+          make check-style
+
+      - name: Run tests
+        working-directory: ./bindings/python
+        run: |
+          source .env/bin/activate
+          make test
