@@ -20,19 +20,19 @@ In this repository, we look at several approaches to creating avatars, changing 
 
 Magic Avatars app requires latest Xcode version to run.
 
-Initial state:
+**Initial state:**
 
 ![]((https://github.com/perpetio/magic_avatars/blob/main/iOS-app-screenshot-1.png))
 <img src="https://github.com/perpetio/magic_avatars/blob/main/iOS-app-screenshot-1.png"  width="380" height="844">
 
 
-Magic Avatar:
+**Magic Avatar:**
 
 ![]((https://github.com/perpetio/magic_avatars/blob/main/iOS-app-screenshot-2.png))
 <img src="https://github.com/perpetio/magic_avatars/blob/main/iOS-app-screenshot-2.png"  width="380" height="844">
 
 
-Replace Background:
+**Replace Background:**
 
 ![]((https://github.com/perpetio/magic_avatars/blob/main/iOS-app-screenshot-3.png))
 <img src="https://github.com/perpetio/magic_avatars/blob/main/iOS-app-screenshot-3.png"  width="380" height="844">
