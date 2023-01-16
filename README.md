@@ -4,6 +4,10 @@
 
 In this repository, we look at several approaches to creating avatars, changing backgrounds, and deep image processing for more detailed output. It is also worth noting that we use both ready-made solutions, namely the *Stability AI SDK* (paid solution), and direct interaction with predefined models (free solution).
 
+## See our tutorial post:
+
+[5 Steps to Create AI Selfies Generator like Lensa: Stable Diffusion In Action](perpet.io/blog/5-steps-to-create-ai-selfies-generator-like-lensa-stable-diffusion-in-action/)
+
 ## Features
 
 - Text-to-Image
