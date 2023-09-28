@@ -6,7 +6,7 @@ In this repository, we look at several approaches to creating avatars, changing 
 
 ## See our tutorial post:
 
-[5 Steps to Create AI Selfies Generator like Lensa: Stable Diffusion In Action](perpet.io/blog/5-steps-to-create-ai-selfies-generator-like-lensa-stable-diffusion-in-action/)
+[5 Steps to Create AI Selfies Generator like Lensa: Stable Diffusion In Action](https://perpet.io/blog/5-steps-to-create-ai-selfies-generator-like-lensa-stable-diffusion-in-action/)
 
 ## Features
 
